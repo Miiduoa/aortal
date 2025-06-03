@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>Line 空氣小幫手｜演講稿簡報</title>
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body { background: #f1f5f9; }
+    .ppt-slide {
+      width: 1280px; height: 720px;
+      background: #fff; border-radius: 32px;
+      margin: 38px auto; box-shadow: 0 8px 48px #a5b4fc33;
+      display: flex; align-items: center; justify-content: center;
+      padding: 70px 90px; position: relative;
+      transition: all 0.25s;
+    }
+    @media (max-width: 900px) {
+      .ppt-slide { width: 99vw; height: 55vw; min-height: 450px; padding: 40px 18px; }
+    }
+    .ppt-title { font-size: 2.5rem; font-weight: 800; color: #1e293b; letter-spacing:2px; margin-bottom: 24px;}
+    .ppt-content { font-size: 1.45rem; color: #334155; line-height:2.3;}
+    .ppt-index {
+      position:absolute;bottom:35px;right:55px;color:#7dd3fc;font-size:1.1rem;font-weight:600;
+      letter-spacing:2px;user-select:none;}
+    .ppt-btn {
+      position:fixed;top:50%;transform:translateY(-50%);
+      background:#fff;border:none;box-shadow:0 2px 11px #bae6fd50;
+      border-radius:50%;width:58px;height:58px;cursor:pointer;font-size:2rem;font-weight:700;color:#0ea5e9;
+      z-index:99;transition:box-shadow 0.18s;
+    }
+    .ppt-btn:active { box-shadow:0 2px 24px #0ea5e950; }
+    .ppt-btn.prev { left:3vw; }
+    .ppt-btn.next { right:3vw; }
+  </style>
+</head>
+<body>
+  <button class="ppt-btn prev" onclick="go(-1)">&#8678;</button>
+  <button class="ppt-btn next" onclick="go(1)">&#8680;</button>
+
+  <div id="ppt-root"></div>
+
+<script>
+const slides = [
+  {
+    title: "Line空氣小幫手｜專案演講稿",
+    content: `大家好，我們是靜宜大學資管系第八組！今天要跟大家分享我們這學期的專題「Line空氣小幫手」──一款真正貼近台灣在地生活的空品智慧助理。\n如果你想隨時掌握空氣品質，馬上掃這個QRcode就能體驗喔！`,
+    extra: `<img src="https://qr-official.line.me/gs/M_470kdmxx_GW.png?oat_content=qr" class="mt-7 mx-auto rounded-2xl shadow-lg" style="width:120px">`
+  },
+  {
+    title: "開發動機",
+    content: `專案最初的靈感，其實來自我們日常在Line群組的討論。現在空污問題越來越嚴重，家人長輩天天關心AQI，但傳統網站操作太麻煩，有時還很卡。如果能像平常跟朋友聊天一樣，直接在Line就能查詢，那不是超級方便嗎？所以我們團隊才決定做這個機器人，讓每個人都能「用最自然的方式守護健康」！`
+  },
+  {
+    title: "使用對象",
+    content: `我們的空氣小幫手，其實適合各種人！像學生打球前查一下空品，上班族出門前一秒搞定AQI，家長、長輩也能問今天適不適合帶小孩散步。只要會用Line，不分年齡、不分職業，都能輕鬆享受我們帶來的便利服務。`
+  },
+  {
+    title: "系統特色",
+    content: `這套機器人有什麼厲害的地方？\n第一，全台城市都能查，第二，直接「講人話」就能問，不需要記死板的指令。AI還會根據空品自動提醒你健康建議，所有回覆都用專業的Line圖文卡片呈現，視覺又清楚又專業。更棒的是，還有每日自動推播跟訂閱提醒，讓你天天都能掌握最新空氣品質！`
+  },
+  {
+    title: "資料來源",
+    content: `我們的資料來源很透明，所有空氣品質跟天氣數據都直接串接政府開放資料，像環保署EPA、氣象署，以及Line官方平台，確保你收到的資訊都正確、即時又安全。所有傳輸也都是HTTPS安全加密，大家可以放心使用！`
+  },
+  {
+    title: "開發技術和工具",
+    content: `在技術方面，我們結合了Node.js、Line Messaging API、GitHub版本控管、Render雲端部署，還有前端的HTML和Tailwind CSS。這些工具讓我們能夠高效率、專業地開發出一套穩定又漂亮的機器人服務。`
+  },
+  {
+    title: "開發流程",
+    content: `我們的開發流程非常嚴謹，從一開始的需求分析、系統設計，到程式開發、測試修正、前端簡報、雲端部署，最後是團隊成果發表。每一個階段都反覆溝通，大家一起分工合作，才能做出這麼完整的專案！`
+  },
+  {
+    title: "Webhook主結構",
+    content: `首先，Webhook是機器人和Line平台溝通的橋樑。只要用戶傳送訊息，Webhook會判斷訊息內容，決定要走哪個功能流程──像查詢空品還是訂閱提醒，全部都靠這個主程式來分流！這樣設計讓整個系統維護、擴充都很方便。`
+  },
+  {
+    title: "空氣品質API串接",
+    content: `我們的空品查詢功能，就是透過程式直接呼叫政府的API。用戶輸入城市名稱後，程式會自動幫你查環保署的即時數據，然後根據AQI值自動給健康建議，讓查詢變得又快又貼心！`
+  },
+  {
+    title: "Flex Message組裝",
+    content: `查詢結果我們不是用死板文字，而是動態產生Line Flex Message卡片，把城市、數據、建議整合成一張專業圖卡。這不只視覺好看，用戶也能一眼看懂重點，還能加互動按鈕，真正提升用戶體驗。`
+  },
+  {
+    title: "推播與訂閱管理",
+    content: `除了單次查詢，我們還設計了「訂閱」跟「推播」功能。用戶可以指定自己想追蹤的城市，系統會每天自動查詢，再主動推播給你。這樣一來，就算忙到忘記查空品，健康提醒也不會漏接。`
+  },
+  {
+    title: "分工方式",
+    content: `我們是全員協作、分工明確的團隊。每位組員都參與主要功能的設計、測試和維護。例如顧晉瑋負責整體規劃與API串接，周攸晨專攻UI/UX設計，楊世堅負責自動推播、後端排程，陳恩儒主導溝通協作與測試，吳容陞專注API測試與系統驗證。大家都為專案付出最大的努力！`
+  },
+  {
+    title: "參考資料",
+    content: `為了讓機器人功能完善，我們查閱了EPA API、氣象署OpenData、LINE官方文件、GitHub專案、設計相關論文跟YouTube技術教學。這些都是我們專案發展過程中最重要的知識來源！`
+  },
+  {
+    title: "空氣品質即時查詢",
+    content: `現在現場Demo一下，假如我輸入「台中空氣品質」，機器人立刻回覆當前AQI數值，PM2.5細懸浮微粒，還有健康建議，重點資訊一目了然。這種設計就是要讓查詢空品變得又快又簡單。`
+  },
+  {
+    title: "多城市空品比較",
+    content: `如果我想同時查幾個城市，像是「台北 台中 高雄」，機器人會自動排序每個城市的空品數值，推薦最適合戶外活動的地點。用這功能可以讓你隨時比較全台各地的空氣品質！`
+  },
+  {
+    title: "訂閱與推播提醒",
+    content: `最後介紹訂閱推播功能，只要輸入「訂閱台中」，系統就會每天自動推播最新空品，或在空品超標時即時通知。你還能一次訂閱多個地點，想查詢或取消訂閱也都很方便，讓你隨時守護自己和家人的健康。`
+  },
+];
+
+let idx = 0;
+function render() {
+  const slide = slides[idx];
+  document.getElementById('ppt-root').innerHTML = `
+    <section class="ppt-slide">
+      <div class="w-full h-full flex flex-col justify-center">
+        <div class="ppt-title">${slide.title}</div>
+        <div class="ppt-content whitespace-pre-line">${slide.content}</div>
+        ${slide.extra || ""}
+        <div class="ppt-index">第 ${idx + 1} / ${slides.length} 頁</div>
+      </div>
+    </section>
+  `;
+}
+function go(dir) {
+  idx += dir;
+  if (idx < 0) idx = 0;
+  if (idx >= slides.length) idx = slides.length - 1;
+  render();
+}
+window.onload = render;
+document.onkeydown = (e) => {
+  if (e.key === "ArrowLeft") go(-1);
+  if (e.key === "ArrowRight") go(1);
+};
+</script>
+</body>
+</html>
