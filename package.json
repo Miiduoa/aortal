@@ -1,0 +1,17 @@
+{
+  "name": "aortal-contract-guard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Small API payload contract checks for CI.",
+  "bin": {
+    "aortal": "./src/cli.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check:example": "node src/cli.mjs check fixtures/users-v2.json --contract fixtures/users.contract.json"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
