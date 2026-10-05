@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "source": "users-v1.json",
+  "schema": {
+    "type": "object",
+    "required": [
+      "email",
+      "id",
+      "name",
+      "plan"
+    ],
+    "properties": {
+      "email": {
+        "type": "string"
+      },
+      "id": {
+        "type": "integer"
+      },
+      "name": {
+        "type": "string"
+      },
+      "plan": {
+        "type": "string"
+      }
+    }
+  }
+}
