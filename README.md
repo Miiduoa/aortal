@@ -1,5 +1,7 @@
 # Aortal
 
+[![ci](https://github.com/Miiduoa/aortal/actions/workflows/ci.yml/badge.svg)](https://github.com/Miiduoa/aortal/actions/workflows/ci.yml)
+
 API 回傳格式變了，不該等到前端壞掉才知道。
 
 Aortal 是一個小型 JSON contract guard。它從實際 payload 建立 schema snapshot，再在 CI 比對新的 payload；required field 消失或型別被改掉時，直接用非零 exit code 擋下來。
